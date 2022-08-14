@@ -1,2 +1,2 @@
-# todo1
+# TODO
 Web service for working with TODO notes

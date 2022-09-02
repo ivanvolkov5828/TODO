@@ -1,12 +1,16 @@
-from rest_framework.viewsets import GenericViewSet
+from rest_framework.viewsets import ModelViewSet
 from .models import User
-from .serializers import ModelUserSerializer
-from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, UpdateModelMixin, CreateModelMixin
+from .serializers import ModelUserSerializer, NewModelUserSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 # Create your views here.
 
 
-class UserModelViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, CreateModelMixin):
+class UserModelViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = ModelUserSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_serializer_class(self):
+        if self.request.version == '0.2':
+            return NewModelUserSerializer
+        return ModelUserSerializer

@@ -4,7 +4,9 @@ import React from 'react';
 
 import UserList from './components/User.js'
 import ProjectList from './components/Project.js'
+import ProjectForm from './components/ProjectForm.js'
 import TodoList from './components/Todo.js'
+import TodoForm from './components/TodoForm.js'
 
 import Menu from './components/Menu.js';
 import Footer from './components/Footer.js';
@@ -24,6 +26,45 @@ class App extends React.Component {
             'todos': [],
             'token': ''
         }
+    }
+
+    deleteProject(id) {
+        const headers = this.get_headers()
+        axios.delete(`http://127.0.0.1:8000/api/projects/${id}/`, {headers, headers})
+            .then( response => {
+                this.setState({projects: this.state.projects.filter((project) => project.id !== id) })
+            }).catch(error => console.log(error))
+    }
+
+    createProject(name, user) {
+        const headers = this.get_headers()
+        const data = {name: name, user: user}
+        axios.post(`http://127.0.0.1:8000/api/projects/`, data, {headers, headers})
+            .then(response => {
+                let new_project = response.data
+                const user = this.state.users.filter((user) => user.id === new_project.user)[0]
+                new_project.user = user
+                this.setState({projects: [...this.state.projects, new_project]})
+            }).catch(error => console.log(error))
+    }
+
+    deleteTodo(id) {
+    const headers = this.get_headers()
+    axios.delete(`http://127.0.0.1:8000/api/todos/${id}/`, {headers, headers})
+        .then( response => {
+            this.setState({todos: this.state.todos.filter((todo) => todo.id !== id) })
+        }).catch(error => console.log(error))
+    }
+
+    createTodo(text, project, user) {
+        const headers = this.get_headers()
+        const data = {text: text, project: project, user: user}
+        axios.post(`http://127.0.0.1:8000/api/todos/`, data, {headers, headers})
+            .then(response => {
+                this.load_data()
+            }).catch(error => {console.log(error)
+            this.setState({todos: []})
+        })
     }
 
     set_token(token) {
@@ -146,10 +187,15 @@ class App extends React.Component {
 
                         <Route exact path='/' element={<UserList users={this.state.users}/>}/>
 
-                        <Route exact path='/todos' element={<TodoList todos={this.state.todos}/>}/>
+                        <Route exact path='/todos' element={<TodoList todos={this.state.todos} deleteTodo={(id)=>this.deleteTodo(id)} />}/>
+
+                        <Route exact path='/projects/create' element={<ProjectForm users={this.state.users} createProject={(name, user) => this.createProject(name, user)} />} />
+
+                        <Route exact path='/todos/create' element={<TodoForm todos={this.state.todos}
+                         createTodo={(text, project, user) => this.createTodo(text, project, user)}/> }>/</Route>
 
                         <Route path='/projects'>
-                            <Route index element={<ProjectList projects={this.state.projects}/>}/>
+                            <Route index element={<ProjectList projects={this.state.projects} deleteProject={(id)=>this.deleteProject(id)} />}/>
                             <Route path='project/:id' element={<ProjectFilterList projects={this.state.projects}/>}/>
                         </Route>
 

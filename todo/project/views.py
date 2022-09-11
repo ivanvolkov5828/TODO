@@ -34,8 +34,8 @@ class TodoModelViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['project', 'created_at']
 
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.is_active = False
-        instance.save()
+    # def destroy(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     instance.is_active = False
+    #     instance.save()
 

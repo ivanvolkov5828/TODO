@@ -88,6 +88,17 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'todo',
+#         'USER': 'volkov_admin',
+#         'PASSWORD': 'volkov1234',
+#         'HOST': 'db',
+#         'PORT': '5432',
+#     }
+# }
+
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -133,7 +144,8 @@ AUTH_USER_MODEL = 'users_app.User'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://127.0.0.1:8000"
+    "http://127.0.0.1:8000",
+    "http://0.0.0.0:80",
 ]
 
 REST_FRAMEWORK = {
